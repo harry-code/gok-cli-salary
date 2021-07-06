@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-// import { UploadFiles } from '~/service/apis/upload';
 import './index.less';
 
 const { Dragger } = Upload;
@@ -11,7 +10,7 @@ export default () => {
     const props = {
         name: 'file',
         multiple: true,
-        accept: '.xlsx',
+        accept: '*',
         action: 'http://127.0.0.1:7001/upload/files',
         onChange(info: any) {
             const { status } = info.file;
