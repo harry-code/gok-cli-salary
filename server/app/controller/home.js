@@ -4,21 +4,33 @@
 const Controller = require('egg').Controller;
 const xlsx = require('xlsx');
 // const fs = require('fs');
+const { doSocial } = require('./../service/social-security');
+const { doAccFund } = require('./../service/accumulation-fund');
+const { doAttendence } = require('./../service/attendance');
 
 class HomeController extends Controller {
   async index() {
     let file;
     try {
       file = this.ctx.request.files[0];
-      const list = [];
+      let list = [];
       const workbook = xlsx.readFile(file.filepath);
       for (const sheet in workbook.Sheets) {
+        const filename = file.filename.split('.')[0];
         if (workbook.Sheets.hasOwnProperty(sheet)) {
-          // 数据直接转成json格式
-          list.push(xlsx.utils.sheet_to_json(workbook.Sheets[sheet]));
+          if (filename.includes('社保单据详细信息')) {
+            doSocial(xlsx.utils.sheet_to_json(workbook.Sheets[sheet]));
+          }
+          if (filename.includes('公积金')) {
+            const data = doAccFund(xlsx.utils.sheet_to_json(workbook.Sheets[sheet]));
+            list = data;
+          }
+          if (filename.includes('OA考勤明细')) {
+            const data = doAttendence(xlsx.utils.sheet_to_json(workbook.Sheets[sheet]));
+            list = data;
+          }
         }
       }
-      console.log('list', list);
       this.ctx.body = list;
     } catch (error) {
       this.ctx.logger.error(error);
