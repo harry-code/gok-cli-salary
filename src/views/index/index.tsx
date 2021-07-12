@@ -1,26 +1,34 @@
-import React from 'react';
-import { Upload, message } from 'antd';
+import React, { useState } from 'react';
+import { Upload, message, Spin, Alert } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
+import { API_URL } from '~/service/request';
+import { exportFileApi, uploadFiles } from '~/service/apis/upload'
 import './index.less';
 
 const { Dragger } = Upload;
 
 export default () => {
-
+    const [flag, setFlag] = useState<boolean>(false);
+    let formData = new FormData();
     const props = {
-        name: 'file',
         multiple: true,
+        showUploadList: false,
         accept: '*',
-        action: 'http://127.0.0.1:7001/upload/files',
-        onChange(info: any) {
-            const { status } = info.file;
-            if (status !== 'uploading') {
-                console.log(info.file, info.fileList);
-            }
-            if (status === 'done') {
-                message.success(`${info.file.name} file uploaded successfully.`);
-            } else if (status === 'error') {
-                message.error(`${info.file.name} file upload failed.`);
+        beforeUpload: (file: any) => {
+            formData.append(`file_${file.uid}`, file);
+        },
+        customRequest: async (e: any) => {
+            try {
+                if (!flag) {
+                    setFlag(true);
+                    const res = await uploadFiles(formData);
+                    if (res.code === 200) {
+                        window.location.href = `${API_URL[process.env.NODE_ENV || 'production']}${exportFileApi()}`
+                    }
+                }
+            } catch (error) {
+                setFlag(false);
+                throw new Error(error);
             }
         },
         onDrop(e: { dataTransfer: { files: any; }; }) {
@@ -41,6 +49,17 @@ export default () => {
                     支持单个或者批量上传
                 </p>
             </Dragger>
+            {/* {
+                isShow ? (
+                    <Spin tip="正在计算中，请稍后">
+                        <Alert
+                            message="文件上传正在计算中..."
+                            description="文件内容计算..."
+                            type="info"
+                        />
+                    </Spin>
+                ) : null
+            } */}
         </div>
     )
 }

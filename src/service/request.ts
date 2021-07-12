@@ -25,7 +25,7 @@ type API_TYPE = {
 
 export const API_URL: API_TYPE = {
   // development: 'http://124.71.147.249:8004',
-  development: 'http://127.0.0.1:7001',
+  development: 'http://192.168.1.57:8088',
   production: 'http://124.71.147.249:8004',
 };
 

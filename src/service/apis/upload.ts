@@ -1,5 +1,9 @@
-import { Post } from './../request';
+import { Get, Post } from './../request';
 
-export const UploadFiles = async (data: any) => {
-    return await Post('/upload/files', data);
+export const uploadFiles = async (form: any) => {
+    return await Post('/rest/salary/import', form);
+};
+
+export const exportFileApi = () => {
+    return '/rest/salary/export';
 };
