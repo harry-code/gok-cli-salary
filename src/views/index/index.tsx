@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, message, Spin, Alert } from 'antd';
+import { Upload, message, Spin } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { API_URL } from '~/service/request';
 import { exportFileApi, uploadFiles } from '~/service/apis/upload'
@@ -26,6 +26,8 @@ export default () => {
                         message.success('上传成功');
                         setFlag(false);
                         window.location.href = `${API_URL[process.env.NODE_ENV || 'production']}${exportFileApi()}`
+                    } else {
+                        message.error(res.msg);
                     }
                 }
             } catch (error) {
