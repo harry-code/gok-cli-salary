@@ -23,6 +23,8 @@ export default () => {
                     setFlag(true);
                     const res = await uploadFiles(formData);
                     if (res.code === 200) {
+                        message.success('上传成功');
+                        setFlag(false);
                         window.location.href = `${API_URL[process.env.NODE_ENV || 'production']}${exportFileApi()}`
                     }
                 }
@@ -31,9 +33,9 @@ export default () => {
                 throw new Error(error);
             }
         },
-        onDrop(e: { dataTransfer: { files: any; }; }) {
-            console.log('Dropped files', e.dataTransfer.files);
-        },
+        // onDrop(e: { dataTransfer: { files: any; }; }) {
+        //     console.log('Dropped files', e.dataTransfer.files);
+        // },
     };
     return (
         <div className="salary">
@@ -49,17 +51,11 @@ export default () => {
                     支持单个或者批量上传
                 </p>
             </Dragger>
-            {/* {
-                isShow ? (
-                    <Spin tip="正在计算中，请稍后">
-                        <Alert
-                            message="文件上传正在计算中..."
-                            description="文件内容计算..."
-                            type="info"
-                        />
-                    </Spin>
+            {
+                flag ? (
+                    <Spin tip="正在上传中，请稍后"></Spin>
                 ) : null
-            } */}
+            }
         </div>
     )
 }
