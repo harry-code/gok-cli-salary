@@ -28,6 +28,7 @@ export default () => {
                         window.location.href = `${API_URL[process.env.NODE_ENV || 'production']}${exportFileApi()}`
                     } else {
                         message.error(res.msg);
+                        setFlag(false);
                     }
                 }
             } catch (error) {
